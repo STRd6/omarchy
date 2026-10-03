@@ -23,4 +23,8 @@ pass "hibernation remove drops resume parameters before rebuilding the UKI"
 # A machine that removed hibernation before remove cleaned up still has the old drop-in.
 ! grep -F '[[ ! -f $RESUME_DROP_IN ]]' "$ROOT/bin/omarchy-hibernation-setup" >/dev/null ||
   fail "hibernation setup rewrites a resume drop-in left by an earlier setup"
+grep -F 'sudo tee "$RESUME_DROP_IN"' "$ROOT/bin/omarchy-hibernation-setup" >/dev/null ||
+  fail "hibernation setup writes the resume drop-in"
+grep -F 'sudo rm -f "$RESUME_DROP_IN"' "$ROOT/bin/omarchy-hibernation-setup" >/dev/null ||
+  fail "hibernation setup drops a stale resume drop-in when it cannot find the offset"
 pass "hibernation setup rewrites a resume drop-in left by an earlier setup"
