@@ -19,3 +19,8 @@ rebuild_line=$(grep -n '^sudo limine-mkinitcpio' "$ROOT/bin/omarchy-hibernation-
 (( remove_line < rebuild_line )) ||
   fail "hibernation remove drops resume parameters before rebuilding the UKI"
 pass "hibernation remove drops resume parameters before rebuilding the UKI"
+
+# A machine that removed hibernation before remove cleaned up still has the old drop-in.
+! grep -F '[[ ! -f $RESUME_DROP_IN ]]' "$ROOT/bin/omarchy-hibernation-setup" >/dev/null ||
+  fail "hibernation setup rewrites a resume drop-in left by an earlier setup"
+pass "hibernation setup rewrites a resume drop-in left by an earlier setup"
